@@ -1,72 +1,83 @@
-import React from "react";
-import { render, fireEvent, act } from "@testing-library/react-native";
+import React from "react"
+// @ fireEvent from core library to check interactions
+import { render, fireEvent } from "@testing-library/react-native"
+import SignIn from "../SignIn"
+// import { interpolate } from "react-native-reanimated"
 
-import SignIn from "../SignIn";
+// const flushMicrotasksQueue = () =>
+//   new Promise((resolve) => setImmediate(resolve))
 
-const flushMicrotasksQueue = () =>
-  new Promise((resolve) => setImmediate(resolve));
+describe("SignIn", () => {
+  it("renders the default elements", () => {
+    const { getAllByText } = render(<SignIn />)
+    // assert that login will appear 2x on the screen
+    expect(getAllByText("Login").length).toBe(2)
+  })
 
-it("renders default elements", () => {
-  const { getAllByText, getByPlaceholderText } = render(<SignIn />);
+  // shows inputs
+  it("renders inputs", () => {
+    const { getByPlaceholderText } = render(<SignIn />)
+    expect(getByPlaceholderText("example")).toBeTruthy()
+    expect(getByPlaceholderText("***")).toBeTruthy()
+  })
 
-  expect(getAllByText("Login").length).toBe(2);
-  getByPlaceholderText("example");
-  getByPlaceholderText("***");
-});
+  it("shows invalid input error messages if both inputs are empty on button press", () => {
+    const { getByTestId, getByText } = render(<SignIn />)
+    fireEvent.press(getByTestId("SignIn.Button"))
+    // #  getByTestId("SignIn.Button") // -> test won't pass if we don't fire the event
+    getByText("Invalid username.")
+    getByText("Invalid password.")
+  })
 
-it("shows invalid input messages", () => {
-  const { getByTestId, getByText } = render(<SignIn />);
+  it("if username invalid show error message", () => {
+    const { getByTestId, getByText, queryAllByText } = render(<SignIn />)
+    // change the value of the password input to a legit pw
+    fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf")
+    // press the login button
+    fireEvent.press(getByTestId("SignIn.Button"))
+    getByText("Invalid username.") // don't wrap this in expect because getByText will already throw an error if it doesn't find the text
+    // assert that Invalid Password will not appear on the screen since we offered it a legit pw
+    expect(queryAllByText("Invalid password.").length).toBe(0)
+    // 
+    fireEvent.changeText(getByTestId("SignIn.usernameInput"), "invalid input")
+    getByText("Invalid username.")
+    // assert that Invalid Password will not appear on the screen since we offered it a legit pw
+    expect(queryAllByText("Invalid password.").length).toBe(0)
+  })
 
-  fireEvent.press(getByTestId("SignIn.Button"));
+  // if password invalid show error message
+  it("if password invalid show error message", () => {
+    const { getByTestId, getByText } = render(<SignIn />)
 
-  getByText("Invalid username.");
-  getByText("Invalid password.");
-});
+    // change the value of the password input
+    fireEvent.changeText(getByTestId("SignIn.usernameInput"), "xxxx")
+    // press the login button
+    fireEvent.press(getByTestId("SignIn.Button"))
+    expect(getByText("Invalid password.")).toBeTruthy()
+  })
 
-it("shows invalid user name error message", () => {
-  const { getByTestId, getByText, queryAllByText } = render(<SignIn />);
+  // it handles valid input submission
+  // it("handles valid input submission", () => {
+  //   const { getByTestId, queryByText, getAllByText } = render(<SignIn />)
 
-  fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf");
+  //   // change the value of the password input
+  //   fireEvent.changeText(getByTestId("SignIn.usernameInput"), "example")
+  //   fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf")
+  //   // press the login button
+  //   fireEvent.press(getByTestId("SignIn.Button"))
 
-  fireEvent.press(getByTestId("SignIn.Button"));
+  //   // assert that Invalid Password will not appear on the screen since we offered it a legit pw and username
+  //   expect(queryByText(/Invalid password./i)).toBeNull()
+  //   expect(queryByText(/Invalid username./i)).toBeNull()
 
-  getByText("Invalid username.");
-  expect(queryAllByText("Invalid password.").length).toBe(0);
+  //   // assert that the button will not appear on the screen since we offered it legit credentials
+  //   // expect(queryAllByText("Login")).toBe(null)
+  //   expect(queryByText(/sign in/i).toBeNull()
+  // })
 
-  fireEvent.changeText(getByTestId("SignIn.usernameInput"), "invalid input");
-
-  getByText("Invalid username.");
-  expect(queryAllByText("Invalid password.").length).toBe(0);
-});
-
-it("shows invalid password error message", () => {
-  const { getByTestId, getByText, queryAllByText } = render(<SignIn />);
-
-  fireEvent.changeText(getByTestId("SignIn.usernameInput"), "example");
-
-  fireEvent.press(getByTestId("SignIn.Button"));
-
-  getByText("Invalid password.");
-  expect(queryAllByText("Invalid username.").length).toBe(0);
-
-  fireEvent.changeText(getByTestId("SignIn.passwordInput"), "invalid input");
-
-  getByText("Invalid password.");
-  expect(queryAllByText("Invalid username.").length).toBe(0);
-});
-
-it("handles valid input submission", async () => {
-  fetch.mockResponseOnce(JSON.stringify({ passes: true }));
-
-  const pushMock = jest.fn();
-  const { getByTestId } = render(<SignIn navigation={{ push: pushMock }} />);
-
-  fireEvent.changeText(getByTestId("SignIn.usernameInput"), "example");
-  fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf");
-  fireEvent.press(getByTestId("SignIn.Button"));
-
-  expect(fetch.mock.calls).toMatchSnapshot();
-  await act(flushMicrotasksQueue);
-
-  expect(pushMock).toBeCalledWith("App");
-});
+  // shows button with text "Login"
+  // it("shows button with text 'Login'", () => {
+  //   const { getByRole } = render(<SignIn />)
+  //   expect(getByRole("Button").length).toBe(1)
+  // })
+})

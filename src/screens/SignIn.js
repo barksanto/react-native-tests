@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, KeyboardAvoidingView } from "react-native";
+import React, { useState } from "react"
+import { StyleSheet, Text, KeyboardAvoidingView } from "react-native"
 
-import { Input, Button, ErrorText } from "../components/Form";
+import { Input, Button, ErrorText } from "../components/Form"
 
 const styles = StyleSheet.create({
   container: {
@@ -16,22 +16,22 @@ const styles = StyleSheet.create({
     fontSize: 34,
     marginBottom: 10,
   },
-});
+})
 
 const useLoginFormState = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [submit, setSubmit] = useState(false);
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [submit, setSubmit] = useState(false)
 
-  let isUsernameValid = false;
-  let isPasswordValid = false;
+  let isUsernameValid = false
+  let isPasswordValid = false
 
   if (username === "example") {
-    isUsernameValid = true;
+    isUsernameValid = true
   }
 
   if (password === "asdf") {
-    isPasswordValid = true;
+    isPasswordValid = true
   }
 
   return {
@@ -48,7 +48,7 @@ const useLoginFormState = ({ navigation }) => {
     submit: {
       value: submit,
       set: () => {
-        setSubmit(true);
+        setSubmit(true)
 
         if (isUsernameValid && isPasswordValid) {
           fetch("https://jsonplaceholder.typicode.com/users", {
@@ -60,29 +60,29 @@ const useLoginFormState = ({ navigation }) => {
           })
             .then((response) => response.json())
             .then(() => {
-              navigation.push("App");
+              navigation.push("App")
             })
             .catch((error) => {
-              console.log("error", error);
-            });
+              console.log("error", error)
+            })
         }
       },
     },
-  };
-};
+  }
+}
 
 export default ({ navigation }) => {
-  const { username, password, submit } = useLoginFormState({ navigation });
+  const { username, password, submit } = useLoginFormState({ navigation })
 
-  let usernameErrorMsg;
-  let passwordErrorMsg;
+  let usernameErrorMsg
+  let passwordErrorMsg
 
   if (submit.value && !username.valid) {
-    usernameErrorMsg = "Invalid username.";
+    usernameErrorMsg = "Invalid username."
   }
 
   if (submit.value && !password.valid) {
-    passwordErrorMsg = "Invalid password.";
+    passwordErrorMsg = "Invalid password."
   }
 
   return (
@@ -106,5 +106,5 @@ export default ({ navigation }) => {
       <ErrorText messages={[usernameErrorMsg, passwordErrorMsg]} />
       <Button testID="SignIn.Button" text="Login" onPress={submit.set} />
     </KeyboardAvoidingView>
-  );
-};
+  )
+}
