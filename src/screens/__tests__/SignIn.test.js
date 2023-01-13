@@ -80,4 +80,8 @@ describe("SignIn", () => {
   //   const { getByRole } = render(<SignIn />)
   //   expect(getByRole("Button").length).toBe(1)
   // })
+
+  it("renders one Login text with color #ba1133", () => {
+    
+  })
 })
