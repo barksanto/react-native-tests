@@ -38,7 +38,7 @@ describe("SignIn", () => {
     getByText("Invalid username.") // don't wrap this in expect because getByText will already throw an error if it doesn't find the text
     // assert that Invalid Password will not appear on the screen since we offered it a legit pw
     expect(queryAllByText("Invalid password.").length).toBe(0)
-    // 
+    //
     fireEvent.changeText(getByTestId("SignIn.usernameInput"), "invalid input")
     getByText("Invalid username.")
     // assert that Invalid Password will not appear on the screen since we offered it a legit pw
@@ -82,6 +82,7 @@ describe("SignIn", () => {
   // })
 
   it("renders one Login text with color #ba1133", () => {
-    
+    const { getByTestId } = render(<SignIn />)
+    expect(getByTestId("toplogin").props.style.color).toBe("#ba1133")
   })
 })

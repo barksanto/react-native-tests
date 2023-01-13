@@ -87,7 +87,9 @@ export default ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="position">
-      <Text style={styles.headerText} testID="toplogin">Login</Text>
+      <Text style={styles.headerText} testID="toplogin">
+        Login
+      </Text>
       <Input
         label="Username"
         placeholder="example"
