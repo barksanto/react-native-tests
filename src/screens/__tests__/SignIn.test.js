@@ -2,6 +2,7 @@ import React from "react"
 // @ fireEvent from core library to check interactions
 import { render, fireEvent } from "@testing-library/react-native"
 import SignIn from "../SignIn"
+
 // import { interpolate } from "react-native-reanimated"
 
 // const flushMicrotasksQueue = () =>
@@ -15,7 +16,7 @@ describe("SignIn", () => {
   })
 
   // shows inputs
-  it("renders inputs", () => {
+  it("shows inputs", () => {
     const { getByPlaceholderText } = render(<SignIn />)
     expect(getByPlaceholderText("example")).toBeTruthy()
     expect(getByPlaceholderText("***")).toBeTruthy()
@@ -56,25 +57,6 @@ describe("SignIn", () => {
     expect(getByText("Invalid password.")).toBeTruthy()
   })
 
-  // it handles valid input submission
-  // it("handles valid input submission", () => {
-  //   const { getByTestId, queryByText, getAllByText } = render(<SignIn />)
-
-  //   // change the value of the password input
-  //   fireEvent.changeText(getByTestId("SignIn.usernameInput"), "example")
-  //   fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf")
-  //   // press the login button
-  //   fireEvent.press(getByTestId("SignIn.Button"))
-
-  //   // assert that Invalid Password will not appear on the screen since we offered it a legit pw and username
-  //   expect(queryByText(/Invalid password./i)).toBeNull()
-  //   expect(queryByText(/Invalid username./i)).toBeNull()
-
-  //   // assert that the button will not appear on the screen since we offered it legit credentials
-  //   // expect(queryAllByText("Login")).toBe(null)
-  //   expect(queryByText(/sign in/i).toBeNull()
-  // })
-
   // shows button with text "Login"
   // it("shows button with text 'Login'", () => {
   //   const { getByRole } = render(<SignIn />)
@@ -85,4 +67,25 @@ describe("SignIn", () => {
     const { getByTestId } = render(<SignIn />)
     expect(getByTestId("toplogin").props.style.color).toBe("#ba1133")
   })
+
+  it("doesn't render invalid username error message if username is valid", () => {
+    const { getByTestId, queryByText } = render(<SignIn />)
+    fireEvent.changeText(getByTestId("SignIn.usernameInput"), "example")
+    fireEvent.press(getByTestId("SignIn.Button")) // @ fireEvent from core library to press the button
+    expect(queryByText(/Invalid username./i)).toBeNull()
+  })
+
+  it("doesn't render invalid password error message if password is valid", () => {
+    const { getByTestId, queryByText } = render(<SignIn />)
+    fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf")
+    fireEvent.press(getByTestId("SignIn.Button")) // @ fireEvent from core library to press the button
+    expect(queryByText(/Invalid password./i)).toBeNull()
+  })
+
+
+
+  
 })
+
+// This removes the warning that appears when running tests - warning can be safely ignored
+jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper")
