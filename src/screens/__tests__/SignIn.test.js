@@ -82,9 +82,16 @@ describe("SignIn", () => {
     expect(queryByText(/Invalid password./i)).toBeNull()
   })
 
+  it("it handles valid input submission", () => {
+    fetch.mockResponseOnce(JSON.stringify({passes: true}))
+    const { getByTestId, getAllByText, getByText } = render(<SignIn />)
+    fireEvent.changeText(getByTestId("SignIn.usernameInput"), "example")
+    fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf")
+    fireEvent.press(getByTestId("SignIn.Button"))
+    // getByText("Success!")
 
-
-  
+    // expect(getAllByText(/login/i)).length(2)
+  })
 })
 
 // This removes the warning that appears when running tests - warning can be safely ignored
