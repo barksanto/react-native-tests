@@ -1,6 +1,6 @@
 import React from "react"
 // @ fireEvent from core library to check interactions
-import { render, fireEvent } from "@testing-library/react-native"
+import { render, fireEvent, act} from "@testing-library/react-native"
 import SignIn from "../SignIn"
 
 // import { interpolate } from "react-native-reanimated"
@@ -82,15 +82,22 @@ describe("SignIn", () => {
     expect(queryByText(/Invalid password./i)).toBeNull()
   })
 
-  it("it handles valid input submission", () => {
-    fetch.mockResponseOnce(JSON.stringify({passes: true}))
-    const { getByTestId, getAllByText, getByText } = render(<SignIn />)
+  it("it handles valid input submission", async () => {
+    // @ fetch.mock is a mock function that we can use to test the fetch request in the SignIn component
+    fetch.mockResponseOnce(JSON.stringify({ passes: true }))
+    const pushMock = jest.fn()
+
+    const { getByTestId, getAllByText, getByText } = render(
+      <SignIn navigation={{ push: pushMock }} />
+    )
+
     fireEvent.changeText(getByTestId("SignIn.usernameInput"), "example")
     fireEvent.changeText(getByTestId("SignIn.passwordInput"), "asdf")
     fireEvent.press(getByTestId("SignIn.Button"))
-    // getByText("Success!")
 
-    // expect(getAllByText(/login/i)).length(2)
+    // wait for the fetch request to resolve before asserting
+    await act(() => new Promise((resolve) => setImmediate(resolve)))
+    expect(pushMock).toBeCalledWith("App")
   })
 })
 
