@@ -1,12 +1,12 @@
-import React from "react";
+import React from "react"
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native"
+import { createStackNavigator } from "@react-navigation/stack"
 
-import SignIn from "./src/screens/SignIn";
-import Example from "./src/screens/Example";
+import SignIn from "./src/screens/SignIn"
+import Example from "./src/screens/Example"
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 export default () => (
   <NavigationContainer>
@@ -19,8 +19,8 @@ export default () => (
       <Stack.Screen
         name="App"
         component={Example}
-        options={{ title: "Success!" }}
+        options={{ title: "Successful login!" }}
       />
     </Stack.Navigator>
   </NavigationContainer>
-);
+)

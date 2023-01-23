@@ -87,7 +87,7 @@ describe("SignIn", () => {
     fetch.mockResponseOnce(JSON.stringify({ passes: true }))
     const pushMock = jest.fn()
 
-    const { getByTestId, getAllByText, getByText } = render(
+    const { getByTestId } = render(
       <SignIn navigation={{ push: pushMock }} />
     )
 
