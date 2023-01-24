@@ -42,23 +42,14 @@ const styles = StyleSheet.create({
 function Example() {
   const [pokemon, setPokemon] = useState("nothing here yet")
   const [pokemonImage, setPokemonImage] = useState("")
-  // function logPoke() {
-  //   fetch(
-  //     `https://pokeapi.co/api/v2/pokemon/${Math.floor(Math.random() * 101)}`
-  //   )
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setPokemon(data.name)
-  //     })
-  // }
 
   const getPoke = useCallback(() => {
     fetch(
-      `https://pokeapi.co/api/v2/pokemon/${Math.floor(Math.random() * 101)}`
+      `https://pokeapi.co/api/v2/pokemon/${Math.floor(Math.random() * 151)}`
     )
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data.sprites.front_default)
+        console.log(data.sprites.front_default)
         setPokemon(data.name)
         setPokemonImage(data.sprites.front_default)
       })
@@ -67,14 +58,22 @@ function Example() {
   return (
     // <Text>Welcome to example component</Text>
     <>
-      <TouchableHighlight style={styles.button} onPress={getPoke}>
+      <Text>Example</Text>
+      <TouchableHighlight
+        style={styles.button}
+        onPress={getPoke}
+        testID="Example.Button"
+      >
         <Text style={styles.text}>{pokemon}</Text>
       </TouchableHighlight>
       <Image
         style={styles.tinyLogo}
         source={{
-          uri: pokemonImage || "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cG9rZW1vbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=900&q=60",
+          uri:
+            pokemonImage ||
+            "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cG9rZW1vbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=900&q=60",
         }}
+        testID="Example.Image"
       />
     </>
   )
